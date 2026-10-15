@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "name": "lumen-forge-ryan-vo",
+  "owner": "A220man",
+  "email": "ryandtvo@gmail.com",
+  "domain": "AI/ML developer tools",
+  "workflows": [
+    "Browse and filter Rust compiler tracking issues with pagination",
+    "Search issues by keywords, labels, and status",
+    "AI-powered issue analysis with advisory summaries (opt-in)"
+  ],
+  "auth": "oidc-keycloak-saml-broker",
+  "llm_providers": [
+    "openai-compatible",
+    "anthropic",
+    "gemini",
+    "ollama"
+  ],
+  "summary": "Work in progress: lumen-forge-ryan-vo",
+  "status": "work-in-progress"
+}
