@@ -16,28 +16,45 @@ describe("App", () => {
     mockFetch.mockImplementation(() => neverResolves);
 
     render(<App />);
-    expect(screen.getByText("Loading...")).toBeInTheDocument();
+    expect(screen.getByText("Loading issues...")).toBeInTheDocument();
   });
 
-  it("displays health data on successful fetch", async () => {
-    const mockHealth = {
-      status: "ok",
-      service: "lumen-forge-ryan-vo",
-      version: "1.0.0",
+  it("displays issue list on successful fetch", async () => {
+    const mockIssues = {
+      items: [
+        {
+          id: 31844,
+          title: "Tracking issue for specialization",
+          body: "This is a tracking issue...",
+          html_url: "https://github.com/rust-lang/rust/issues/31844",
+          state: "open",
+          labels: ["tracking-issue", "F-specialization"],
+          assignees: [],
+          comments_count: 323,
+          created_at: "2016-03-15T12:00:00Z",
+          updated_at: "2024-01-15T12:00:00Z",
+          closed_at: null,
+          author_login: "aturon",
+          author_html_url: "https://github.com/aturon",
+          repository: "rust-lang/rust",
+        },
+      ],
+      total: 1,
+      page: 1,
+      page_size: 20,
+      total_pages: 1,
     };
     mockFetch.mockResolvedValue({
       ok: true,
-      json: () => Promise.resolve(mockHealth),
+      json: () => Promise.resolve(mockIssues),
     });
 
     render(<App />);
 
     await waitFor(() => {
-      expect(screen.getByText("Status")).toBeInTheDocument();
-      expect(screen.getByText("ok")).toBeInTheDocument();
-      // Use getByLabelText or more specific query for service
-      expect(screen.getByText("Version")).toBeInTheDocument();
-      expect(screen.getByText("1.0.0")).toBeInTheDocument();
+      expect(screen.getByText("Rust Tracking Issues")).toBeInTheDocument();
+      expect(screen.getByText("#31844")).toBeInTheDocument();
+      expect(screen.getByText("Tracking issue for specialization")).toBeInTheDocument();
     });
   });
 
@@ -48,7 +65,6 @@ describe("App", () => {
 
     await waitFor(() => {
       expect(screen.getByText(/Error:/)).toBeInTheDocument();
-      // Error message is split across text nodes, use regex
       expect(screen.getByText(/Network error/)).toBeInTheDocument();
     });
   });
@@ -57,13 +73,14 @@ describe("App", () => {
     mockFetch.mockResolvedValue({
       ok: false,
       status: 500,
+      json: () => Promise.resolve({ detail: "Internal Server Error" }),
     });
 
     render(<App />);
 
     await waitFor(() => {
       expect(screen.getByText(/Error:/)).toBeInTheDocument();
-      expect(screen.getByText(/HTTP 500/)).toBeInTheDocument();
+      expect(screen.getByText(/Internal Server Error/)).toBeInTheDocument();
     });
   });
 });

@@ -26,7 +26,7 @@ Tests: `backend/tests/test_health.py`, `frontend/src/App.test.tsx`
 
 ### issue-tracker — Rust issue tracking dashboard with AI analysis
 
-Status: in_progress
+Status: done
 
 Acceptance:
 - Backend stores and serves Rust tracking issues from GitHub
@@ -35,9 +35,9 @@ Acceptance:
 - Three workflows: browse, search, analyze issue
 - Persistent SQLite storage with pagination
 
-Implementation: `backend/app/api/issues.py`, `backend/app/services/github_sync.py`, `backend/app/services/ai_analysis.py`, `backend/app/models/issue.py`, `backend/app/core/database.py`, `frontend/src/components/IssueList.tsx`, `frontend/src/components/IssueDetail.tsx`, `frontend/src/api/client.ts`
+Implementation: `backend/app/models/issue.py`, `backend/app/api/issues.py`, `backend/app/services/github_sync.py`, `backend/app/services/ai_analysis.py`, `backend/app/core/database.py`, `backend/app/core/config.py`, `backend/tests/test_issues.py`, `frontend/src/api/client.ts`, `frontend/src/components/IssueList.tsx`, `frontend/src/components/IssueDetail.tsx`, `frontend/src/App.tsx`, `frontend/src/index.css`
 
-Tests: `backend/tests/test_issues.py`, `backend/tests/test_ai_analysis.py`, `frontend/src/components/IssueList.test.tsx`
+Tests: `backend/tests/test_issues.py`, `frontend/src/App.test.tsx`
 
 ### auth-oidc — OIDC authentication with Keycloak
 
@@ -65,6 +65,7 @@ Acceptance:
 - LICENSE MIT
 - pyproject.toml with author metadata
 - .env.example with blank credentials
+- .gitignore
 
 Implementation: `README.md`, `CHANGELOG.md`, `portfolio.json`, `LICENSE`, `pyproject.toml`, `.env.example`, `.gitignore`
 
