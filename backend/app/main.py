@@ -35,10 +35,9 @@ def create_app() -> FastAPI:
     async def health_check():
         return {"status": "ok", "service": "lumen-forge-ryan-vo", "version": "1.0.0"}
 
-    # API routes will be added here
-    # from app.api import issues, auth
-    # app.include_router(issues.router, prefix="/api/v1")
-    # app.include_router(auth.router, prefix="/api/v1")
+    # API routes
+    from app.api import issues
+    app.include_router(issues.router, prefix="/api/v1")
 
     return app
 
