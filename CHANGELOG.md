@@ -1,6 +1,23 @@
 # Changelog
 
+## 1.2.0 — work-in-progress checkpoint
+
+Partial code published for continued development. Known issues: STATUS.md.
+
 ## 1.1.0 — work-in-progress checkpoint
+
+Partial code published for continued development. Known issues: STATUS.md.
+
+## 1.1.1 — code quality improvements
+
+### Fixed
+- Fixed `datetime.utcnow()` deprecation warnings in models by using timezone-aware `datetime.now(timezone.utc)`
+- Removed monkey-patching of `IssueAnalysis` model in API layer; now uses proper service functions from `github_sync.py`
+- Cleaned up unused imports in `backend/app/api/issues.py`
+
+### Changed
+- `Issue.synced_at` and `IssueAnalysis.created_at` now use `lambda: datetime.now(timezone.utc)` for timezone-aware defaults
+- `analyze_issue` endpoint now calls `create_analysis` service function instead of monkey-patched model method
 
 Partial code published for continued development. Known issues: STATUS.md.
 

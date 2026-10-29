@@ -4,9 +4,8 @@ from typing import Optional, List, Dict, Any
 from pydantic import BaseModel
 
 from app.core.database import get_session
-from app.services.github_sync import sync_issues, get_issues, get_issue
+from app.services.github_sync import sync_issues, get_issues, get_issue, create_analysis, get_analyses
 from app.services.ai_analysis import llm_client, LLMProviderError
-from app.models.issue import IssueAnalysis
 
 
 router = APIRouter(prefix="/issues", tags=["issues"])
@@ -104,8 +103,8 @@ async def analyze_issue(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
     
-    # Store analysis
-    stored = await IssueAnalysis.create_analysis(
+    # Store analysis using service function
+    stored = await create_analysis(
         db=db,
         issue_id=issue_id,
         summary=analysis["summary"],
@@ -114,7 +113,7 @@ async def analyze_issue(
         unresolved_questions=analysis["unresolved_questions"],
         provider=llm_client.provider,
         model=llm_client.model,
-        raw_response=json.dumps(analysis) if isinstance(analysis, dict) else None,
+        raw_response=analysis.get("raw_response"),
     )
     
     result = stored.to_dict()
@@ -139,47 +138,3 @@ async def list_analyses(
         a["advisory"] = True
     return analyses
 
-
-# Need to add these methods to IssueAnalysis class
-import json
-from app.models.issue import IssueAnalysis as IssueAnalysisModel
-
-# Monkey-patch class methods
-async def _create_analysis(
-    db: AsyncSession,
-    issue_id: int,
-    summary: str,
-    key_points: List[str],
-    blockers: List[str],
-    unresolved_questions: List[str],
-    provider: str,
-    model: str,
-    raw_response: Optional[str] = None,
-) -> IssueAnalysisModel:
-    analysis = IssueAnalysisModel(
-        issue_id=issue_id,
-        summary=summary,
-        key_points=json.dumps(key_points),
-        blockers=json.dumps(blockers),
-        unresolved_questions=json.dumps(unresolved_questions),
-        provider=provider,
-        model=model,
-        raw_response=raw_response,
-    )
-    db.add(analysis)
-    await db.commit()
-    await db.refresh(analysis)
-    return analysis
-
-
-async def _get_analyses(db: AsyncSession, issue_id: int) -> List[Dict[str, Any]]:
-    from sqlalchemy import select
-    result = await db.execute(
-        select(IssueAnalysisModel).where(IssueAnalysisModel.issue_id == issue_id).order_by(IssueAnalysisModel.created_at.desc())
-    )
-    analyses = result.scalars().all()
-    return [a.to_dict() for a in analyses]
-
-
-IssueAnalysis.create_analysis = staticmethod(_create_analysis)
-IssueAnalysis.get_analyses = staticmethod(_get_analyses)

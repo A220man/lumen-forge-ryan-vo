@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy import Column, Integer, String, Text, DateTime, Index
 from app.core.database import Base
 
@@ -21,7 +21,7 @@ class Issue(Base):
     author_html_url = Column(String(500), nullable=True)
     repository = Column(String(100), nullable=False, default="rust-lang/rust")
     raw_data = Column(Text, nullable=True)  # Full GitHub API response for flexibility
-    synced_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    synced_at = Column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
 
     __table_args__ = (
         Index("ix_issues_state", "state"),
@@ -60,8 +60,9 @@ class IssueAnalysis(Base):
     unresolved_questions = Column(Text, nullable=True)  # JSON array
     provider = Column(String(50), nullable=False)
     model = Column(String(100), nullable=False)
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    created_at = Column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
     raw_response = Column(Text, nullable=True)
+
     def to_dict(self) -> dict:
         import json
         return {
