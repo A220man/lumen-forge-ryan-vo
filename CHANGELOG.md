@@ -1,8 +1,20 @@
 # Changelog
 
+## 1.3.0 — work-in-progress checkpoint
+
+Partial code published for continued development. Known issues: STATUS.md.
+
 ## 1.2.0 — work-in-progress checkpoint
 
 Partial code published for continued development. Known issues: STATUS.md.
+
+### Added
+- Structured logging in AI analysis service (`backend/app/services/ai_analysis.py`)
+  - INFO: LLM client initialization, analysis start/completion with metrics
+  - DEBUG: prompt construction, API calls, response parsing
+  - WARNING: missing API key on analysis request
+  - ERROR: provider API failures with status codes
+  - Exception logging with context for unexpected failures
 
 ## 1.1.0 — work-in-progress checkpoint
 
