@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from sqlalchemy import Column, Integer, String, Text, DateTime, Index
+from sqlalchemy import Column, Integer, String, Text, DateTime, Index, Boolean
 from app.core.database import Base
 
 
@@ -62,6 +62,7 @@ class IssueAnalysis(Base):
     model = Column(String(100), nullable=False)
     created_at = Column(DateTime, nullable=False, default=lambda: datetime.now(timezone.utc))
     raw_response = Column(Text, nullable=True)
+    advisory = Column(Boolean, nullable=False, default=True)
 
     def to_dict(self) -> dict:
         import json
@@ -76,4 +77,5 @@ class IssueAnalysis(Base):
             "model": self.model,
             "created_at": self.created_at.isoformat() if self.created_at else None,
             "raw_response": self.raw_response,
+            "advisory": self.advisory,
         }

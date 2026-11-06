@@ -186,6 +186,7 @@ async def create_analysis(
     provider: str,
     model: str,
     raw_response: Optional[str] = None,
+    advisory: bool = True,
 ) -> IssueAnalysis:
     """Store an AI analysis result."""
     analysis = IssueAnalysis(
@@ -197,6 +198,7 @@ async def create_analysis(
         provider=provider,
         model=model,
         raw_response=raw_response,
+        advisory=advisory,
     )
     db.add(analysis)
     await db.commit()

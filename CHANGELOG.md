@@ -1,8 +1,19 @@
 # Changelog
 
+## 1.4.0 — work-in-progress checkpoint
+
+Partial code published for continued development. Known issues: STATUS.md.
+
 ## 1.3.0 — work-in-progress checkpoint
 
 Partial code published for continued development. Known issues: STATUS.md.
+
+### Fixed
+- Added `advisory` column to `IssueAnalysis` model with default `True` for consistent AI analysis labeling
+- Fixed `Boolean` import in `backend/app/models/issue.py`
+- Updated `create_analysis` service function to accept and store `advisory` parameter
+- Updated `analyze_issue` API endpoint to pass `advisory=True` to service function
+- Removed manual `advisory` flag additions in API layer; now handled by model's `to_dict()`
 
 ## 1.2.0 — work-in-progress checkpoint
 
