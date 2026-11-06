@@ -114,11 +114,10 @@ async def analyze_issue(
         provider=llm_client.provider,
         model=llm_client.model,
         raw_response=analysis.get("raw_response"),
+        advisory=True,
     )
     
-    result = stored.to_dict()
-    result["advisory"] = True
-    return result
+    return stored.to_dict()
 
 
 @router.get("/{issue_id}/analyses")
@@ -133,8 +132,4 @@ async def list_analyses(
         raise HTTPException(status_code=404, detail="Issue not found")
     
     analyses = await get_analyses(db, issue_id)
-    # Add advisory flag
-    for a in analyses:
-        a["advisory"] = True
     return analyses
-
