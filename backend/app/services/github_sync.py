@@ -1,6 +1,6 @@
 import json
 import httpx
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import List, Optional, Dict, Any
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -87,7 +87,7 @@ async def sync_issues(db: AsyncSession) -> Dict[str, Any]:
                     existing.author_login = issue_data["user"]["login"]
                     existing.author_html_url = issue_data["user"]["html_url"]
                     existing.raw_data = raw_data
-                    existing.synced_at = datetime.utcnow()
+                    existing.synced_at = datetime.now(timezone.utc)
                     stats["updated"] += 1
                 else:
                     # Create new
