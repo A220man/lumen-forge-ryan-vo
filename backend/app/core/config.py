@@ -30,6 +30,10 @@ class Settings(BaseSettings):
     oidc_issuer_url: str | None = None
     oidc_client_id: str | None = None
     oidc_client_secret: str | None = None
+    # JWT (optional)
+    jwt_secret: str | None = None
+    # JWT (optional)
+    jwt_secret: str | None = None
 
 
 settings = Settings()
