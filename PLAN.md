@@ -41,7 +41,7 @@ Tests: `backend/tests/test_issues.py`, `frontend/src/App.test.tsx`
 
 ### auth-oidc — OIDC authentication with Keycloak
 
-Status: planned
+Status: in_progress
 
 Acceptance:
 - Keycloak realm configured via compose

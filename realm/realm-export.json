@@ -1,0 +1,105 @@
+{
+  "realm": "lumen-forge",
+  "id": "lumen-forge-realm",
+  "adminEmail": "admin@lumen-forge.local",
+  "smtp": {
+    "auth": false,
+    "from": "no-reply@lumen-forge.local",
+    "host": "smtp.example.com",
+    "port": 587
+  },
+  "authenticationFlows": {
+    "login": {
+      "name": "Login",
+      "startSteps": ["register", "verify-email", "verify-password"]
+    },
+    "registration": {
+      "name": "Registration",
+      "startSteps": ["verify-email"]
+    }
+  },
+  "clients": [
+    {
+      "id": "lumen-forge-frontend",
+      "name": "lumen-forge-frontend",
+      "clientType": "openid-connect",
+      "redirectUris": ["http://127.0.0.1:3000/*", "http://localhost:3000/*"],
+      "postLogoutRedirectUris": ["http://127.0.0.1:3000/", "http://localhost:3000/"],
+      "webOrigins": ["http://127.0.0.1:3000", "http://localhost:3000"],
+      "confidential": true,
+      "standardFlowEnabled": true,
+      "directGrantFlowEnabled": false,
+      "overFlowTokenMinMinutes": 15,
+      "overFlowTokenMaxMinutes": 15,
+      "accessTokenLifespan": 15,
+      "refreshTokenLifespan": 30,
+      "samlMode": false
+    },
+    {
+      "id": "lumen-forge-backend",
+      "name": "lumen-forge-backend",
+      "clientType": "openid-connect",
+      "redirectUris": ["http://127.0.0.1:8000/api/auth/callback*", "http://localhost:8000/api/auth/callback*"],
+      "postLogoutRedirectUris": ["http://127.0.0.1:8000/", "http://localhost:8000/"],
+      "confidential": true,
+      "standardFlowEnabled": true,
+      "directGrantFlowEnabled": false,
+      "publicClient": false,
+      "authenticationFlowBindingMap": [
+        {
+          "id": "1",
+          "authenticationFlowName": "login",
+          "authenticationFlowType": "DEFAULT"
+        }
+      ]
+    }
+  ],
+  "identityProviders": [
+    {
+      "id": "google",
+      "name": "Google",
+      "providerId": "google",
+      "providerConfig": {
+        "clientId": "GOOGLE_CLIENT_ID",
+        "clientSecret": "GOOGLE_CLIENT_SECRET"
+      }
+    }
+  ],
+  "roles": [
+    {
+      "name": "viewer",
+      "id": "viewer",
+      "description": "Viewer role - can read issues"
+    },
+    {
+      "name": "operator",
+      "id": "operator",
+      "description": "Operator role - can analyze issues"
+    },
+    {
+      "name": "admin",
+      "id": "admin",
+      "description": "Admin role - can manage all aspects"
+    }
+  ],
+  "users": [
+    {
+      "username": "demo-user",
+      "email": "demo@lumen-forge.local",
+      "enabled": true,
+      "firstName": "Demo",
+      "lastName": "User",
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "demo-password",
+          "temporary": false
+        }
+      ],
+      "attributes": {
+        "role": ["viewer"]
+      }
+    }
+  ]
+}

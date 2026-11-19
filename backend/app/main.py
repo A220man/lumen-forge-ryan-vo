@@ -4,6 +4,9 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.core.database import init_db
+from app.core.auth import create_access_token
+from app.api import auth as auth_api
+from app.api import issues
 
 
 @asynccontextmanager
@@ -36,7 +39,7 @@ def create_app() -> FastAPI:
         return {"status": "ok", "service": "lumen-forge-ryan-vo", "version": "1.0.0"}
 
     # API routes
-    from app.api import issues
+    app.include_router(auth_api.router, prefix="/api/v1")
     app.include_router(issues.router, prefix="/api/v1")
 
     return app
