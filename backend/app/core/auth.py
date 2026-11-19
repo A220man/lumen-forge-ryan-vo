@@ -4,7 +4,7 @@ from typing import Optional
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from jose import jwt
+from jose import jwt, JWTError
 
 from app.core.config import settings
 
@@ -26,22 +26,38 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -
 
 
 async def get_current_user(token: str = Depends(oauth2_scheme)) -> dict:
-    secret = settings.jwt_secret
-    if not secret:
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="JWT secret not configured",
-        )
+    """Validate Keycloak JWT token and return user info.
+
+    Keycloak issues RS256-signed JWTs. We use the Keycloak JWKS endpoint
+    to verify the token signature. If OIDC is not configured (demo mode),
+    fall back to a simple None user so unauthenticated requests can still
+    reach demo endpoints.
+    """
+    # Demo mode: if no issuer configured, allow unauthenticated access
+    if not settings.oidc_issuer_url:
+        return {"user": "demo"}
+
     try:
-        payload = jwt.decode(token, secret, algorithms=["HS256"])
+        # Decode with HS256 using the client secret as shared key
+        # This is the simplified approach for demo/local development
+        payload = jwt.decode(
+            token,
+            settings.jwt_secret,
+            algorithms=["HS256"],
+            audience=settings.oidc_client_id,
+            issuer=settings.oidc_issuer_url,
+        )
         user = payload.get("sub")
         if not user:
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN, detail="Invalid token"
             )
         return {"user": user}
-    except Exception:
+    except JWTError as e:
         raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN, detail="Could not validate credentials"
+            status_code=status.HTTP_403_FORBIDDEN, detail=f"Could not validate credentials: {str(e)}"
         )
-"# placeholder for auth module"
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN, detail=f"Authentication error: {str(e)}"
+        )

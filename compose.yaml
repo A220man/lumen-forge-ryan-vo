@@ -11,6 +11,9 @@ services:
     environment:
       - DATABASE_URL=sqlite+aiosqlite:///./data/app.db
       - DEBUG=false
+      - OIDC_ISSUER_URL=http://keycloak:8080/realms/lumen-forge
+      - OIDC_CLIENT_ID=lumen-forge-client
+      - OIDC_CLIENT_SECRET=lumen-forge-client-secret
     healthcheck:
       test: ["CMD", "python", "-c", "import httpx; httpx.get('http://localhost:8000/health', timeout=2).raise_for_status()"]
       interval: 30s
@@ -34,6 +37,26 @@ services:
       interval: 30s
       timeout: 3s
       start_period: 5s
+      retries: 3
+    restart: unless-stopped
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0.2
+    container_name: lumen-forge-keycloak
+    environment:
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=admin
+      - KC_DB=sqlite
+      - KC_DB_SCHEMA=public
+    ports:
+      - "127.0.0.1:8080:8080"
+    command:
+      - start-dev
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 3s
+      start_period: 10s
       retries: 3
     restart: unless-stopped
 
