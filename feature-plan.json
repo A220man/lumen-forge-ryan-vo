@@ -81,8 +81,7 @@
         "realm-export.json"
       ],
       "tests": [
-        "backend/tests/test_auth.py",
-        "frontend/src/auth/AuthProvider.test.tsx"
+        "backend/tests/test_auth.py"
       ]
     },
     {
