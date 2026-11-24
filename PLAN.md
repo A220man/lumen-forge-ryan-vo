@@ -52,7 +52,7 @@ Acceptance:
 
 Implementation: `backend/app/core/auth.py`, `backend/app/api/auth.py`, `frontend/src/auth/`, `compose.yaml (Keycloak service)`, `realm-export.json`
 
-Tests: `backend/tests/test_auth.py`, `frontend/src/auth/AuthProvider.test.tsx`
+Tests: `backend/tests/test_auth.py`
 
 ### docs-packaging — Documentation, packaging, and portfolio metadata
 

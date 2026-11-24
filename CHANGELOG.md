@@ -1,8 +1,25 @@
 # Changelog
 
+## 1.8.0 — work-in-progress checkpoint
+
+Partial code published for continued development. Known issues: STATUS.md.
+
 ## 1.7.0 — work-in-progress checkpoint
 
 Partial code published for continued development. Known issues: STATUS.md.
+
+## 1.7.1 — OIDC authentication checkpoint
+
+### Added
+- Backend auth test (`backend/tests/test_auth.py`) verifying token creation and demo mode fallback
+- OIDC configuration in compose.yaml with Keycloak service and realm-export.json
+- Demo mode support in `backend/app/core/auth.py` when no OIDC issuer is configured
+
+### Changed
+- Updated `feature-plan.json` to track auth-oidc feature in_progress status
+- Updated `PLAN.md` to reflect auth-oidc checkpoint progress
+
+Known issues: Frontend PKCE login flow and protected API endpoints pending
 
 ## 1.6.0 — work-in-progress checkpoint
 
